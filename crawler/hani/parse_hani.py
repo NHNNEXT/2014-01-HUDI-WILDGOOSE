@@ -87,15 +87,10 @@ def extract_author(html_doc):
 				break
 			if(escape):
 				break
-
-	# print author
+	if(author.find('연합뉴') != -1):
+		author = author[author.rfind('.')+1 :].strip()
 	return author
-
-	# for line in content.splitlines():
-	# 	line.rfind()
-	# 	print line
 		
-
 def parse_article_with_url(url):
 	parsed_article = dict()
 	html_doc = urllib.urlopen(url).read() # 간단한 get요청
@@ -106,11 +101,14 @@ def parse_article_with_url(url):
 	parsed_article['contents'] = extract_contents(html_doc)
 	parsed_article['author'] = extract_author(html_doc)
 	# parsed_article['provide'] = '한겨레'
+	print parsed_article['author']
 
-for i in range(1, int(find_last_pagenum())) :
-	hani_URLs = hani_URLs + get_artile_urls_with_pagenum(i)
-	print 'hi'
+
+# 전체 기사의 URL을 모두 긁어온다
+# for i in range(1, int(find_last_pagenum())) :
+# 	hani_URLs = hani_URLs + get_artile_urls_with_pagenum(i)
 
 
 
 # parse_article_with_url test
+# parse_article_with_url('http://www.hani.co.kr/arti/society/society_general/628271.html')
