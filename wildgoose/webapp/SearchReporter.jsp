@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page isELIgnored="false"%>
 
 <!DOCTYPE html>
 <meta charset="UTF-8" />
@@ -17,12 +16,12 @@
 	<header class="header"></header>
 	<div class="container">
 		<div class="logo-container">
-			<img src="image/logo.png" alt="wildgoose logo" class="logo-image"/>
+			<a href="/SearchReporter"><img src="image/logo.png" alt="wildgoose logo" class="logo-image"/></a>
 		</div>
 		<div class="search-container">
 			<form action="./SearchReporter" method="get" >
 				<div class="search-entry column">
-					<input type="search" id="query-entry" class="text-entry query-entry" name="q" placeholder="기자를 검색어로 찾아보세요." value="${ requestScope.search_query }" />
+					<input type="search" id="query-entry" class="text-entry query-entry" name="q" placeholder="기자를 검색어로 찾아보세요." value="${ requestScope.searchQuery }" />
 				</div>
 				<div class="search-button column">
 					<input type="submit" id="search-action" value ="Search"/>
@@ -30,18 +29,26 @@
 			</form>
 		</div>
 		<div class="search-result">
-			<ul>
-				<c:forEach var="reporter" items="${ requestScope.reporters }">
-					<li class="card" >
-						<h3 class="email">${ reporter.email }</h3>
-						<p class="sub-email">${ reporter.author_info }</p>
-						<h4 class="press-name">${ reporter.press_name }</h4>			
-						<div class="article-container">
-							<a href="${ reporter.article_URL }" target="_blank">${ reporter.article_title }</a>
-						</div>
-					</li>
-				</c:forEach>
-			</ul>
+			<c:choose>
+				<c:when test="${ empty requestScope.webError }">
+					<ul>
+						<c:forEach var="reporter" items="${ requestScope.reporters }">
+							<li class="card" >
+								<h3 class="email">${ reporter.email }</h3>
+								<p class="sub-email">${ reporter.authorInfo }</p>
+								<h4 class="press-name">${ reporter.pressName }</h4>			
+								<div class="article-container">
+									<a href="${ reporter.articleURL }" target="_blank">${ reporter.articleTitle }</a>
+								</div>
+							</li>
+						</c:forEach>
+					</ul>
+				</c:when>
+				<c:otherwise>
+						${ requestScope.webError.cause }
+						${ requestScope.webError.notice }
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</div>
 	<footer class="footer"></footer>
